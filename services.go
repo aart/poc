@@ -29,7 +29,7 @@ func (l *Listener) SaveData(in Person, ack *bool) error {
 	return nil
 }
 
-func queryAllPersonsDB() *[]Person {
+func queryAllPersonsDB() []Person {
 	db, err := sql.Open("mysql", "root:@tcp(10.240.61.254:3306)/test")
 	if err != nil {
 		log.Fatal(err) 

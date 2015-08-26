@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 	"net/rpc"
+	"pack"
 )
 
 import _ "github.com/go-sql-driver/mysql"
