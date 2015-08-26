@@ -58,7 +58,7 @@ func queryAllPersonsDB() []Person {
 
 	}
 
-	return &personList
+	return personList
 }
 
 func main() {
