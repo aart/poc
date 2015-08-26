@@ -9,9 +9,9 @@ import (
 	"poc/pack"
 )
 
-
 func heartbeat(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "heartbeat")
+	log.Println("web layer - heartbeat")
 
 }
 
@@ -30,7 +30,7 @@ func queryData(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	log.Println("queryData: ",out)
+	log.Println("web layer - queryData: ", out)
 
 	b, err := json.Marshal(out)
 	if err != nil {
@@ -48,7 +48,7 @@ func saveData(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("saveData: ",in.Name, " ", in.Firstname)
+	log.Println("web layer - saveData: ", in.Name, " ", in.Firstname)
 
 	client, err := rpc.Dial("tcp", "localhost:42586")
 	if err != nil {
@@ -64,10 +64,36 @@ func saveData(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func getTransportOrder(w http.ResponseWriter, r *http.Request) {
+
+	client, err := rpc.Dial("tcp", "localhost:42586")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var out pack.TransportOrder
+	in := pack.Empty{}
+
+	err = client.Call("Listener.GetTransportOrder", in, &out)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("web layer - getTransportOrder: ", out)
+
+	b, err := json.MarshalIndent(out,"","   ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	io.WriteString(w, string(b))
+
+}
+
 func main() {
 
 	http.HandleFunc("/", heartbeat)
 	http.HandleFunc("/queryData", queryData)
+	http.HandleFunc("/getTransportOrder", getTransportOrder)
 	http.HandleFunc("/saveData", saveData)
 	http.ListenAndServe(":8080", nil)
 }

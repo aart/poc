@@ -1,39 +1,32 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net"
 	"net/rpc"
-	"database/sql"
+	"poc/pack"
 )
 
 import _ "github.com/go-sql-driver/mysql"
 
 type Listener int
 
-type Empty struct {
-}
-
-type Person struct {
-	Name      string
-	Firstname string
-}
-
-func (l *Listener) QueryData(in Empty, out *[]Person) error {
+func (l *Listener) QueryData(in pack.Empty, out *[]pack.Person) error {
 	*out = queryAllPersonsDB()
 	return nil
 }
 
-func (l *Listener) SaveData(in Person, ack *bool) error {
+func (l *Listener) SaveData(in pack.Person, ack *bool) error {
 	fmt.Println(in.Name, " ", in.Firstname)
 	return nil
 }
 
-func queryAllPersonsDB() []Person {
+func queryAllPersonsDB() []pack.Person {
 	db, err := sql.Open("mysql", "root:@tcp(10.240.61.254:3306)/test")
 	if err != nil {
-		log.Fatal(err) 
+		log.Fatal(err)
 	}
 	defer db.Close()
 
@@ -42,7 +35,7 @@ func queryAllPersonsDB() []Person {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
-	personList := make([]Person, 10)
+	personList := make([]pack.Person,0)
 
 	for rows.Next() {
 
@@ -54,13 +47,45 @@ func queryAllPersonsDB() []Person {
 			panic(err.Error()) // proper error handling instead of panic in your app
 		}
 
-		p := Person{Name: name, Firstname: firstname}
+		p := pack.Person{Name: name, Firstname: firstname}
 		personList = append(personList, p)
 
 	}
 
 	return personList
 }
+
+
+func (l *Listener) GetTransportOrder(in pack.Empty, out *pack.TransportOrder) error {
+	
+to := pack.TransportOrder{
+		BusinessId:  "8678900",
+		Carrier:     "ABCLogistics",
+		Express:     false,
+		ContractRef: "5678890DDC",
+		Goods: pack.Goods{
+			Id:             "6543457898",
+			Description:    "fine goods",
+			Bulk:           false,
+			TotalLoading:   122,
+			TotalNetWeight: 6788,
+			TotalVolume:    5678,
+			TotalPackage:   89900,
+			TotalPallets:   778889,
+		},
+		Origin: pack.Endpoint{
+            Detail: "Endpoint A",
+        },
+		Destination: pack.Endpoint{
+			Detail: "Endpoint B",
+		},
+	}
+
+	*out = to
+	return nil
+}
+
+
 
 func main() {
 
