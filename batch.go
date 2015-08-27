@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func queryDB() {
+func queryPerson() {
 	db, err := sql.Open("mysql", "root:@tcp(10.240.61.254:3306)/test")
 	if err != nil {
 		log.Fatal(err) // Just for example purpose. You should use proper error handling instead of panic
@@ -36,6 +36,6 @@ func queryDB() {
 func main() {
 
 	fmt.Println("querying the DB")
-	queryDB()
+	queryPerson()
 
 }

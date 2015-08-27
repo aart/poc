@@ -76,25 +76,24 @@ func testQueryData() {
 //------------------------------------------------------
 // test nested structs
 func testGetTransportOrder() {
-    url := "http://localhost:8080/getTransportOrder?id=1"
-    fmt.Println("URL:>", url)
+	url := "http://localhost:8080/getTransportOrder?id=1"
+	fmt.Println("URL:>", url)
 
-    req, err := http.NewRequest("POST", url, nil)
-    req.Header.Set("Content-Type", "application/json")
+	req, err := http.NewRequest("POST", url, nil)
+	req.Header.Set("Content-Type", "application/json")
 
-    client := &http.Client{}
-    resp, err := client.Do(req)
-    if err != nil {
-        panic(err)
-    }
-    defer resp.Body.Close()
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
 
-    fmt.Println("response Status:", resp.Status)
-    fmt.Println("response Headers:", resp.Header)
-    body, _ := ioutil.ReadAll(resp.Body)
-    fmt.Println("response Body:", string(body))
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(body))
 }
-
 
 func main() {
 	testGetTransportOrder()

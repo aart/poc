@@ -27,21 +27,17 @@ func (l *Listener) SaveData(in pack.Person, ack *bool) error {
 		log.Fatal(err)
 	}
 	defer db.Close()
-    
-    stmtIns, err := db.Prepare("INSERT INTO persons VALUES( ?, ? )") // ? = placeholder
-    if err != nil {
-        panic(err.Error()) // proper error handling instead of panic in your app
-    }
-    defer stmtIns.Close()
+
+	stmtIns, err := db.Prepare("INSERT INTO persons VALUES( ?, ? )") // ? = placeholder
+	if err != nil {
+		panic(err.Error()) // proper error handling instead of panic in your app
+	}
+	defer stmtIns.Close()
 
 	_, err = stmtIns.Exec(in.Name, in.Firstname)
 
-
 	return nil
 }
-
-
-
 
 func queryAllPersonsDB() []pack.Person {
 	db, err := sql.Open("mysql", "root:@tcp(10.240.61.254:3306)/test")
@@ -55,7 +51,7 @@ func queryAllPersonsDB() []pack.Person {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
-	personList := make([]pack.Person,0)
+	personList := make([]pack.Person, 0)
 
 	for rows.Next() {
 
@@ -75,13 +71,12 @@ func queryAllPersonsDB() []pack.Person {
 	return personList
 }
 
-
 func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) error {
 
-	log.Println("query parameter: ",in)
+	log.Println("query parameter: ", in)
 
 	db, err := sql.Open("mysql", "root:@tcp(10.240.61.254:3306)/test")
-	
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -93,18 +88,18 @@ func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) er
 	}
 
 	log.Println("step 1")
-	
-	var BusinessId  string
-	var Carrier     string
-	var Express     bool
+
+	var BusinessId string
+	var Carrier string
+	var Express bool
 	var ContractRef string
-	var Goods       string
-	var Origin      string
+	var Goods string
+	var Origin string
 	var Destination string
 
-	err = rowA.Scan(&BusinessId,&Carrier,&Express,&ContractRef,&Goods,&Origin,&Destination)
+	err = rowA.Scan(&BusinessId, &Carrier, &Express, &ContractRef, &Goods, &Origin, &Destination)
 	if err != nil {
-			panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
 	rowB := db.QueryRow("SELECT * FROM goods WHERE id = ?", Goods)
@@ -112,49 +107,46 @@ func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) er
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
-log.Println("step 2")
+	log.Println("step 2")
 
 	var g pack.Goods
 
-	err = rowB.Scan(&g.Id,&g.Description,&g.Bulk,&g.TotalLoading,&g.TotalNetWeight,&g.TotalVolume,&g.TotalPackage,&g.TotalPallets)
+	err = rowB.Scan(&g.Id, &g.Description, &g.Bulk, &g.TotalLoading, &g.TotalNetWeight, &g.TotalVolume, &g.TotalPackage, &g.TotalPallets)
 
 	rowC := db.QueryRow("SELECT * FROM endpoint WHERE id = ?", Origin)
 	if err != nil {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
-log.Println("step 3")
+	log.Println("step 3")
 
 	var o pack.Endpoint
 
-	err = rowC.Scan(&o.Id,&o.Detail)
+	err = rowC.Scan(&o.Id, &o.Detail)
 
-	rowD := db.QueryRow("SELECT * FROM endpoint WHERE businessdd = ?", Destination)
+	rowD := db.QueryRow("SELECT * FROM endpoint WHERE id = ?", Destination)
 	if err != nil {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
 	var d pack.Endpoint
 
-	err = rowD.Scan(&d.Id,&d.Detail)
+	err = rowD.Scan(&d.Id, &d.Detail)
 
-to := pack.TransportOrder{
+	to := pack.TransportOrder{
 		BusinessId:  BusinessId,
 		Carrier:     Carrier,
-		Express:    Express,
+		Express:     Express,
 		ContractRef: ContractRef,
-		Goods: g,
-		Origin: o,
+		Goods:       g,
+		Origin:      o,
 		Destination: d,
 	}
-
 
 	*out = to
 
 	return nil
 }
-
-
 
 func main() {
 

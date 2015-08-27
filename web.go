@@ -76,7 +76,7 @@ func getTransportOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var out pack.TransportOrder
-	
+
 	err = client.Call("Listener.GetTransportOrderById", in, &out)
 	if err != nil {
 		log.Fatal(err)
@@ -84,7 +84,7 @@ func getTransportOrder(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("web layer - getTransportOrder: ", out)
 
-	b, err := json.MarshalIndent(out,"","   ")
+	b, err := json.MarshalIndent(out, "", "   ")
 	if err != nil {
 		log.Fatal(err)
 	}

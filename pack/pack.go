@@ -20,7 +20,7 @@ type Goods struct {
 }
 
 type Endpoint struct {
-	Id string
+	Id     string
 	Detail string
 }
 

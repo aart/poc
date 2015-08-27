@@ -24,10 +24,10 @@ func (l *Listener) SaveData(in pack.Person, ack *bool) error {
 }
 
 func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) error {
-	
+
 	log.Println("Query parameter: ", in)
 
-to := pack.TransportOrder{
+	to := pack.TransportOrder{
 		BusinessId:  "867",
 		Carrier:     "ABCLogistics",
 		Express:     false,
@@ -43,11 +43,11 @@ to := pack.TransportOrder{
 			TotalPallets:   778889,
 		},
 		Origin: pack.Endpoint{
-			Id:     "1234"
-            Detail: "Endpoint A",
-        },
+			Id:     "1234",
+			Detail: "Endpoint A",
+		},
 		Destination: pack.Endpoint{
-			Id:     "1235"
+			Id:     "1235",
 			Detail: "Endpoint B",
 		},
 	}
