@@ -78,6 +78,8 @@ func queryAllPersonsDB() []pack.Person {
 
 func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) error {
 
+	log.Println("query parameter: ",in)
+
 	db, err := sql.Open("mysql", "root:@tcp(10.240.61.254:3306)/test")
 	
 	if err != nil {
@@ -90,6 +92,8 @@ func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) er
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
+	log.Println("step 1")
+	
 	var BusinessId  string
 	var Carrier     string
 	var Express     bool
@@ -108,6 +112,8 @@ func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) er
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
 
+log.Println("step 2")
+
 	var g pack.Goods
 
 	err = rowB.Scan(&g.Id,&g.Description,&g.Bulk,&g.TotalLoading,&g.TotalNetWeight,&g.TotalVolume,&g.TotalPackage,&g.TotalPallets)
@@ -116,6 +122,8 @@ func (l *Listener) GetTransportOrderById(in string, out *pack.TransportOrder) er
 	if err != nil {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
+
+log.Println("step 3")
 
 	var o pack.Endpoint
 

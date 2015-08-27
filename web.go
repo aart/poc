@@ -77,7 +77,7 @@ func getTransportOrder(w http.ResponseWriter, r *http.Request) {
 
 	var out pack.TransportOrder
 	
-	err = client.Call("Listener.GetTransportOrderByIdById", in, &out)
+	err = client.Call("Listener.GetTransportOrderById", in, &out)
 	if err != nil {
 		log.Fatal(err)
 	}
