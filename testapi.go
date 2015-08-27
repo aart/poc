@@ -76,7 +76,7 @@ func testQueryData() {
 //------------------------------------------------------
 // test nested structs
 func testGetTransportOrder() {
-    url := "http://localhost:8080/getTransportOrder"
+    url := "http://localhost:8080/getTransportOrder?id=1"
     fmt.Println("URL:>", url)
 
     req, err := http.NewRequest("POST", url, nil)

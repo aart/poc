@@ -66,15 +66,18 @@ func saveData(w http.ResponseWriter, r *http.Request) {
 
 func getTransportOrder(w http.ResponseWriter, r *http.Request) {
 
+	u := r.URL
+	q := u.Query()
+	in := q.Get("id")
+
 	client, err := rpc.Dial("tcp", "localhost:42586")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	var out pack.TransportOrder
-	in := pack.Empty{}
-
-	err = client.Call("Listener.GetTransportOrder", in, &out)
+	
+	err = client.Call("Listener.GetTransportOrderByIdById", in, &out)
 	if err != nil {
 		log.Fatal(err)
 	}
